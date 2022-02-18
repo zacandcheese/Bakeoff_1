@@ -1,11 +1,13 @@
 import java.awt.AWTException;
 import java.awt.Rectangle;
 import java.awt.Robot;
+//import java.awt.InputEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import processing.core.PApplet;
 
 //when in doubt, consult the Processsing reference: https://processing.org/reference/
+import com.jogamp.newt.opengl.GLWindow;
 
 int margin = 200; //set the margin around the squares
 final int padding = 50; // padding between buttons and also their width/height
@@ -17,6 +19,9 @@ int finishTime = 0; //records the time of the final click
 int hits = 0; //number of successful clicks
 int misses = 0; //number of missed clicks
 Robot robot; //initialized in setup 
+int offsetx = 10; //Zach's Setting
+int offsety = 30; //Zach's Setting
+int state = 0; // button
 
 int numRepeats = 1; //sets the number of times each button repeats in the test
 
@@ -49,6 +54,12 @@ void setup()
   System.out.println("trial order: " + trials);
   
   surface.setLocation(0,0);// put window in top left corner of screen (doesn't always work)
+  
+  Rectangle bounds = getButtonLocation(0);
+  java.awt.Frame frame = ( (processing.awt.PSurfaceAWT.SmoothCanvas) ((processing.awt.PSurfaceAWT)surface).getNative()).getFrame();
+  java.awt.Point point = frame.getLocationOnScreen();
+  
+  robot.mouseMove(offsetx + bounds.x + bounds.width / 2, offsety + bounds.y + bounds.height / 2);
 }
 
 
@@ -96,9 +107,8 @@ void mousePressed() // test to see if hit was in target!
     //write to terminal some output. Useful for debugging too.
     println("we're done!");
   }
-
+  println(mouseX + " " + mouseY);
   Rectangle bounds = getButtonLocation(trials.get(trialNum));
-
  //check to see if mouse cursor is inside button 
   if ((mouseX > bounds.x && mouseX < bounds.x + bounds.width) && (mouseY > bounds.y && mouseY < bounds.y + bounds.height)) // test to see if hit was within bounds
   {
@@ -130,9 +140,8 @@ void drawButton(int i)
 {
   Rectangle bounds = getButtonLocation(i);
 
-  if (trials.get(trialNum) == i){ // see if current button is the target
+  if (trials.get(trialNum) == i) // see if current button is the target
     fill(0, 255, 0); // if so, fill green
-  }
   else if (trialNum < trials.size() - 1 && trials.get(trialNum + 1) == i)
     fill(255, 255, 0); // if the current button is the next target, fill yellow
     // fill(255, 0, 0); //fill red
@@ -140,11 +149,7 @@ void drawButton(int i)
     fill(200); // if not, fill gray
 
   // rect(bounds.x, bounds.y, bounds.width, bounds.height); //draw button
-  ellipse(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2, bounds.width, bounds.height); //draw button 
-  if (trials.get(trialNum) == i){
-    fill(255,0,0);
-    ellipse(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2, 10, 10); //draw button      
-  }
+  ellipse(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2, bounds.width, bounds.height); //draw button
 }
 
 void mouseMoved()
@@ -164,4 +169,28 @@ void keyPressed()
   //can use the keyboard if you wish
   //https://processing.org/reference/keyTyped_.html
   //https://processing.org/reference/keyCode.html
+  if (key == CODED) {
+    if (keyCode == UP) {
+      println("UP");
+      if (state > 3)
+         state -= 4; 
+    } else if (keyCode == DOWN) {
+      println("DOWN");
+      if (state < 12)
+        state += 4;
+    } else if (keyCode == LEFT) {
+      println("LEFT");
+      if (state % 4 != 0)
+          state -= 1;
+    } else if (keyCode == RIGHT) {
+      println("RIGHT");
+      if (state % 4 != 3)
+         state += 1;
+    } 
+    Rectangle bounds = getButtonLocation(state);
+    robot.mouseMove(offsetx + bounds.x + bounds.width / 2, offsety + bounds.y + bounds.height / 2);
+  }
+  else {
+     robot.mousePress(1024); 
+  }
 }

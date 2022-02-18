@@ -17,6 +17,9 @@ int finishTime = 0; //records the time of the final click
 int hits = 0; //number of successful clicks
 int misses = 0; //number of missed clicks
 Robot robot; //initialized in setup 
+int frameX = 10;
+int frameY = 30;
+
 
 int numRepeats = 1; //sets the number of times each button repeats in the test
 
@@ -100,7 +103,8 @@ void mousePressed() // test to see if hit was in target!
   Rectangle bounds = getButtonLocation(trials.get(trialNum));
 
  //check to see if mouse cursor is inside button 
-  if ((mouseX > bounds.x && mouseX < bounds.x + bounds.width) && (mouseY > bounds.y && mouseY < bounds.y + bounds.height)) // test to see if hit was within bounds
+ // FIXME 1.5 * bounds //
+  if ((mouseX > bounds.x && mouseX < bounds.x + 1.5 * bounds.width) && (mouseY > bounds.y && mouseY < bounds.y + 1.5* bounds.height)) // test to see if hit was within bounds
   {
     System.out.println("HIT! " + trialNum + " " + (millis() - startTime)); // success
     hits++; 
@@ -139,9 +143,31 @@ void drawButton(int i)
   else
     fill(200); // if not, fill gray
 
-  // rect(bounds.x, bounds.y, bounds.width, bounds.height); //draw button
-  ellipse(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2, bounds.width, bounds.height); //draw button 
+  rect(bounds.x, bounds.y, bounds.width, bounds.height); //draw button
+  //ellipse(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2, bounds.width, bounds.height); //draw button 
   if (trials.get(trialNum) == i){
+    fill(255,0,0);
+    ellipse(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2, 10, 10); //draw button      
+  }
+  mouseMoved();
+}
+
+void drawEnlargedButton(int i)
+{
+   Rectangle bounds = getButtonLocation(i);
+
+  if (trials.get(trialNum) == i){ // see if current button is the target
+    fill(0, 255, 0); // if so, fill green
+  }
+  else if (trialNum < trials.size() - 1 && trials.get(trialNum + 1) == i)
+    fill(255, 255, 0); // if the current button is the next target, fill yellow
+    // fill(255, 0, 0); //fill red
+  else
+    fill(200); // if not, fill gray
+
+  rect(bounds.x, bounds.y, 1.5*bounds.width, 1.5*bounds.height); //draw button
+  //ellipse(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2, 1.5*bounds.width, 1.5*bounds.height); //draw button 
+  if (trialNum < trials.size() && trials.get(trialNum) == i){
     fill(255,0,0);
     ellipse(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2, 10, 10); //draw button      
   }
@@ -151,6 +177,15 @@ void mouseMoved()
 {
    //can do stuff everytime the mouse is moved (i.e., not clicked)
    //https://processing.org/reference/mouseMoved_.html
+     //int x = (i % 4) * (padding + buttonSize) + margin;
+     //int y = (i / 4) * (padding + buttonSize) + margin;
+     
+     int i = int((mouseX - margin + 2*frameX) / (padding + buttonSize)) % 4;
+     int j = int((mouseY - margin + frameY) / (padding + buttonSize));
+     if (trialNum < trials.size() && i < 4 && i >=0 && j < 4 && j >=0){
+       drawEnlargedButton(i + 4*j);
+     }
+     
 }
 
 void mouseDragged()
