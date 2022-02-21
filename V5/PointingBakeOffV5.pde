@@ -202,8 +202,12 @@ void keyPressed()
   //can use the keyboard if you wish
   //https://processing.org/reference/keyTyped_.html
   //https://processing.org/reference/keyCode.html
+  int tempx = mouseX;
+  int tempy = mouseY;
   robot.mousePress(InputEvent.BUTTON1_MASK);//1024)
   robot.mouseRelease(InputEvent.BUTTON1_MASK); 
+  
+  robot.mouseMove(tempx + frameX, tempy + frameY);
   
   
 }
