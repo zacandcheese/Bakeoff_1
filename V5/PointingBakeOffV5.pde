@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import processing.core.PApplet;
 
+import java.awt.event.InputEvent;
 //when in doubt, consult the Processsing reference: https://processing.org/reference/
 
 int margin = 200; //set the margin around the squares
@@ -201,6 +202,8 @@ void keyPressed()
   //can use the keyboard if you wish
   //https://processing.org/reference/keyTyped_.html
   //https://processing.org/reference/keyCode.html
-  robot.mousePress(1024); 
+  robot.mousePress(InputEvent.BUTTON1_MASK);//1024)
+  robot.mouseRelease(InputEvent.BUTTON1_MASK); 
+  
   
 }
