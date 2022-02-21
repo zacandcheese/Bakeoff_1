@@ -18,8 +18,8 @@ int finishTime = 0; //records the time of the final click
 int hits = 0; //number of successful clicks
 int misses = 0; //number of missed clicks
 Robot robot; //initialized in setup 
-int frameX = 10;
-int frameY = 30;
+int frameX = 0; // 10
+int frameY = 50; // 30
 
 
 int numRepeats = 1; //sets the number of times each button repeats in the test
@@ -83,7 +83,7 @@ void draw()
     drawButton(i); //draw button
 
   fill(255, 0, 0, 200); // set fill color to translucent red
-  ellipse(mouseX, mouseY, 20, 20); //draw user cursor as a circle with a diameter of 20
+  ellipse(mouseX, mouseY, 10, 10); //draw user cursor as a circle with a diameter of 10
 }
 
 void mousePressed() // test to see if hit was in target!
@@ -141,7 +141,7 @@ void drawButton(int i)
     fill(0, 255, 0); // if so, fill green
   }
   else if (trialNum < trials.size() - 1 && trials.get(trialNum + 1) == i)
-    fill(255, 255, 0); // if the current button is the next target, fill yellow
+    fill(161, 166, 23); // if the current button is the next target, fill yellow
     // fill(255, 0, 0); //fill red
   else
     fill(200); // if not, fill gray
@@ -163,7 +163,7 @@ void drawEnlargedButton(int i)
     fill(0, 255, 0); // if so, fill green
   }
   else if (trialNum < trials.size() - 1 && trials.get(trialNum + 1) == i)
-    fill(255, 255, 0); // if the current button is the next target, fill yellow
+    fill(161, 166, 23); // if the current button is the next target, fill yellow
     // fill(255, 0, 0); //fill red
   else
     fill(200); // if not, fill gray
@@ -188,6 +188,8 @@ void mouseMoved()
      if (trialNum < trials.size() && i < 4 && i >=0 && j < 4 && j >=0){
        drawEnlargedButton(i + 4*j);
      }
+     fill(255, 0, 0, 200); // set fill color to translucent red
+     ellipse(mouseX, mouseY, 10, 10); //draw user cursor as a circle with a diameter of 10
      
 }
 
@@ -204,9 +206,9 @@ void keyPressed()
   //https://processing.org/reference/keyCode.html
   int tempx = mouseX;
   int tempy = mouseY;
+  robot.mouseMove(tempx + frameX, tempy + frameY);
   robot.mousePress(InputEvent.BUTTON1_MASK);//1024)
-  robot.mouseRelease(InputEvent.BUTTON1_MASK); 
-  
+  //robot.mouseRelease(InputEvent.BUTTON1_MASK); 
   robot.mouseMove(tempx + frameX, tempy + frameY);
   
   
